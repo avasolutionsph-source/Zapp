@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm create:*)",
+      "Bash(cp -r zapp-temp/* zapp-temp/.* .)",
+      "Bash(rm -rf zapp-temp)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \":*)",
+      "Bash(python -c \":*)",
+      "Bash(npx vite:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/opet_/OneDrive/Desktop/Zapp2/**)",
+      "Bash(start http://localhost:5173)"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ZAPP Donuts ERP - Tailwind v4 Theme
+   ============================================================ */
+
+@theme {
+  /* Brand colors */
+  --color-zapp-orange: #FF6B00;
+  --color-zapp-orange-light: #FF8A33;
+  --color-zapp-orange-dark: #CC5500;
+  --color-zapp-brown: #4A2C2A;
+  --color-zapp-cream: #FFF8F0;
+  --color-zapp-gold: #FFD700;
+  --color-zapp-green: #22C55E;
+  --color-zapp-red: #EF4444;
+  --color-zapp-blue: #3B82F6;
+
+  /* Sidebar */
+  --color-sidebar: #1E1E2D;
+  --color-sidebar-hover: #2A2A3D;
+  --color-sidebar-active: #FF6B00;
+  --color-sidebar-text: #A8A29E;
+  --color-sidebar-text-active: #FF6B00;
+  --color-sidebar-border: #44403C;
+}
+
+/* ── Base resets ─────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ── Scrollbar styling ───────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
