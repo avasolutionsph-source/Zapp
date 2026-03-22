@@ -4,8 +4,6 @@ import {
   Upload,
   AlertTriangle,
   CheckCircle,
-  Loader2,
-  Clock,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import {

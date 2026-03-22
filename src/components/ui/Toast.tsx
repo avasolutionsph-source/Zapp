@@ -81,13 +81,13 @@ const bgMap: Record<ToastVariant, string> = {
 };
 
 function Toast({ toast, onRemove }: { toast: ToastItem; onRemove: () => void }) {
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (toast.duration && toast.duration > 0) {
       timerRef.current = setTimeout(onRemove, toast.duration);
     }
-    return () => clearTimeout(timerRef.current);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [toast.duration, onRemove]);
 
   return (

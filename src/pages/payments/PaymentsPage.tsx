@@ -22,7 +22,6 @@ import {
   Stat,
   Badge,
   Button,
-  EmptyState,
 } from '@/components/ui';
 import type { TableColumn, SelectOption, Tab } from '@/components/ui';
 import type { Payment } from '@/types';
@@ -57,7 +56,6 @@ export default function PaymentsPage() {
     payments,
     stores,
     currentUser,
-    billingRecords,
     demoUsers,
   } = useStore();
 

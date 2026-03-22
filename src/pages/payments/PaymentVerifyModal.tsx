@@ -12,7 +12,6 @@ import {
   Modal,
   Button,
   Badge,
-  StatusBadge,
   Card,
   CardContent,
 } from '@/components/ui';

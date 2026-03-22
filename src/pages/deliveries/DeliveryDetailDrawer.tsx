@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Truck,
-  Package,
   CheckCircle2,
   ClipboardList,
 } from 'lucide-react';
@@ -11,7 +10,6 @@ import {
   Drawer,
   Button,
   StatusBadge,
-  Badge,
   Table,
   ConfirmDialog,
 } from '@/components/ui';

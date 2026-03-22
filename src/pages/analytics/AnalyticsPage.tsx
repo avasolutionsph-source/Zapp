@@ -13,7 +13,6 @@ import { Tabs, type Tab } from '@/components/ui/Tabs';
 import { Table, type TableColumn } from '@/components/ui/Table';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { SalesMetric } from '@/types';
 import {
   AreaChart,
   Area,
@@ -36,16 +35,12 @@ import {
   BarChart3,
   MapPin,
   Trophy,
-  Calendar,
   Filter,
 } from 'lucide-react';
 
 // ── Constants ────────────────────────────────────────────────
 
 const COLORS = ['#FF6B00', '#22C55E', '#3B82F6', '#EF4444', '#FFD700', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#14B8A6'];
-
-const fmt = (n: number) =>
-  n.toLocaleString('en-PH', { maximumFractionDigits: 0 });
 
 const fmtCurrency = (n: number) =>
   `P${n.toLocaleString('en-PH', { maximumFractionDigits: 0 })}`;
@@ -71,8 +66,6 @@ export default function AnalyticsPage() {
   const salesMetrics = useStore((s) => s.salesMetrics);
   const stores = useStore((s) => s.stores);
   const plants = useStore((s) => s.plants);
-  const distributors = useStore((s) => s.distributors);
-
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
@@ -513,7 +506,7 @@ export default function AnalyticsPage() {
                       <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `P${(v / 1000).toFixed(0)}k`} />
                       <Tooltip
                         contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                        formatter={(value: number) => [fmtCurrency(value), '']}
+                        formatter={(value: any) => [fmtCurrency(Number(value)), '']}
                       />
                       <Legend />
                       <Area
@@ -547,7 +540,7 @@ export default function AnalyticsPage() {
                       <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `P${(v / 1000).toFixed(0)}k`} />
                       <Tooltip
                         contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                        formatter={(value: number) => [fmtCurrency(value), '']}
+                        formatter={(value: any) => [fmtCurrency(Number(value)), '']}
                       />
                       <Legend />
                       <Bar dataKey="dr" fill="#3B82F6" name="DR Sales" radius={[4, 4, 0, 0]} />
@@ -617,7 +610,7 @@ export default function AnalyticsPage() {
                       <YAxis dataKey="area" type="category" tick={{ fontSize: 11 }} width={120} />
                       <Tooltip
                         contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                        formatter={(value: number) => [fmtCurrency(value), '']}
+                        formatter={(value: any) => [fmtCurrency(Number(value)), '']}
                       />
                       <Legend />
                       <Bar dataKey="drSales" fill="#3B82F6" name="DR Sales" radius={[0, 4, 4, 0]} />
@@ -669,7 +662,7 @@ export default function AnalyticsPage() {
                           outerRadius={130}
                           innerRadius={60}
                           strokeWidth={2}
-                          label={({ province, contribution }) => `${province} (${contribution.toFixed(1)}%)`}
+                          label={(entry: any) => `${entry.province} (${entry.contribution.toFixed(1)}%)`}
                           labelLine={{ strokeWidth: 1 }}
                         >
                           {provinceSales.map((_, idx) => (
@@ -678,7 +671,7 @@ export default function AnalyticsPage() {
                         </Pie>
                         <Tooltip
                           contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                          formatter={(value: number) => [fmtCurrency(value), 'SRP Sales']}
+                          formatter={(value: any) => [fmtCurrency(Number(value)), 'SRP Sales']}
                         />
                       </PieChart>
                     </ResponsiveContainer>

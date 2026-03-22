@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store as StoreIcon, Eye } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import {
   Card,
@@ -10,7 +10,6 @@ import {
   Table,
   StatusBadge,
   Badge,
-  Skeleton,
 } from '@/components/ui';
 import type { TableColumn, SelectOption } from '@/components/ui';
 import type { Store } from '@/types';
@@ -23,7 +22,6 @@ export default function StoresPage() {
     getStoresForCurrentUser,
     plants,
     distributors,
-    areaManagers,
   } = useStore();
 
   const allStores = getStoresForCurrentUser();

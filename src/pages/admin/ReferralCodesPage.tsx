@@ -9,14 +9,12 @@ import {
   Building2,
   Activity,
   Download,
-  Eye,
   Ban,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useStore } from '@/store/useStore';
 import {
   Card,
-  CardHeader,
   CardContent,
   Button,
   Badge,
@@ -26,7 +24,6 @@ import {
   SearchInput,
   Stat,
   EmptyState,
-  Skeleton,
   ConfirmDialog,
   useToast,
 } from '@/components/ui';

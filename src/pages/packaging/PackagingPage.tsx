@@ -7,7 +7,6 @@ import {
   Trash2,
   Truck,
   Receipt,
-  Calendar,
   Info,
   CheckCircle,
 } from 'lucide-react';
@@ -19,7 +18,6 @@ import {
   CardFooter,
   Table,
   Tabs,
-  StatusBadge,
   Badge,
   Button,
   SearchInput,

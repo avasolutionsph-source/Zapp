@@ -25,8 +25,6 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-import type { Delivery } from '@/types';
-
 export function FranchiseeDashboard() {
   const [loading, setLoading] = useState(true);
 
@@ -184,7 +182,7 @@ export function FranchiseeDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Line type="monotone" dataKey="sales" stroke="#FF6B00" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>

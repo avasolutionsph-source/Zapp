@@ -9,7 +9,6 @@ import { Stat } from '@/components/ui/Stat';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Table, type TableColumn } from '@/components/ui/Table';
-import { Badge } from '@/components/ui/Badge';
 import {
   Store as StoreIcon,
   TrendingUp,
@@ -33,8 +32,6 @@ export function DistributorDashboard() {
   const currentUser = useStore((s) => s.currentUser);
   const stores = useStore((s) => s.stores);
   const salesMetrics = useStore((s) => s.salesMetrics);
-  const distributors = useStore((s) => s.distributors);
-
   const distId = currentUser?.distributorId ?? '';
 
   useEffect(() => {
@@ -173,7 +170,7 @@ export function DistributorDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Line type="monotone" dataKey="sales" stroke="#FF6B00" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>

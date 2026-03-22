@@ -24,8 +24,6 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-import type { Delivery } from '@/types';
-
 export function PlantManagerDashboard() {
   const [loading, setLoading] = useState(true);
 

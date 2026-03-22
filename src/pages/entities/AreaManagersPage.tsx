@@ -18,7 +18,6 @@ import {
   Stat,
 } from '@/components/ui';
 import type { TableColumn, SelectOption } from '@/components/ui';
-import type { AreaManager } from '@/types';
 
 const PAGE_SIZE = 10;
 

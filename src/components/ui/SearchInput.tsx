@@ -17,7 +17,7 @@ export function SearchInput({
   ...props
 }: SearchInputProps) {
   const [internal, setInternal] = useState(controlledValue ?? '');
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync controlled value
   useEffect(() => {
@@ -26,7 +26,7 @@ export function SearchInput({
 
   const handleChange = (val: string) => {
     setInternal(val);
-    clearTimeout(timerRef.current);
+    if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => onChange(val), debounce);
   };
 
@@ -35,7 +35,7 @@ export function SearchInput({
     onChange('');
   };
 
-  useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   return (
     <div className={clsx('relative', className)}>

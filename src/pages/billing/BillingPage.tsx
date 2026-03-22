@@ -20,7 +20,6 @@ import {
   Stat,
   StatusBadge,
   Button,
-  Badge,
 } from '@/components/ui';
 import type { TableColumn, SelectOption } from '@/components/ui';
 import type { BillingRecord } from '@/types';
@@ -120,8 +119,6 @@ export default function BillingPage() {
     if (!id) return 'Direct (ZAPP)';
     return distributors.find((d) => d.id === id)?.name ?? id;
   };
-  const plantName = (id: string) => plants.find((p) => p.id === id)?.name ?? id;
-
   // Check if user has multi-plant access
   const hasMultiplePlants = currentUser?.role === 'owner' || currentUser?.role === 'operations_manager';
 

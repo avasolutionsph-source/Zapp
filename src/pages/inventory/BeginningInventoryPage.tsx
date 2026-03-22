@@ -20,12 +20,11 @@ import {
   Badge,
   FileUpload,
   Table,
-  Input,
   ConfirmDialog,
   EmptyState,
 } from '@/components/ui';
 import type { TableColumn, SelectOption, UploadedFile } from '@/components/ui';
-import type { AIResult, InventoryItem, DeliveryItem } from '@/types';
+import type { AIResult, InventoryItem } from '@/types';
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -64,10 +63,7 @@ export default function BeginningInventoryPage() {
   const {
     deliveries,
     stores,
-    beginningInventories,
     addBeginningInventory,
-    confirmBeginningInventory,
-    currentUser,
   } = useStore();
 
   // Only show delivered ones
@@ -130,7 +126,11 @@ export default function BeginningInventoryPage() {
         skuName: r.skuName ?? '',
         quantity: r.extractedValue ?? 0,
       }));
-      const disc = await aiService.detectDiscrepancies(drItems, crates);
+      const crateItems = crates.map((c) => ({
+        skuId: c.skuId ?? '',
+        estimatedValue: c.estimatedValue,
+      }));
+      const disc = await aiService.detectDiscrepancies(drItems, crateItems);
       setDiscrepancies(disc);
 
       // Build confirmed rows

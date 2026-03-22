@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import {
   Building2,
-  Eye,
   ChevronDown,
   ChevronUp,
   Store as StoreIcon,
@@ -17,10 +16,8 @@ import {
   StatusBadge,
   Badge,
   Stat,
-  EmptyState,
 } from '@/components/ui';
 import type { TableColumn, SelectOption } from '@/components/ui';
-import type { Distributor } from '@/types';
 
 const PAGE_SIZE = 10;
 

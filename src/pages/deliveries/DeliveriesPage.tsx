@@ -8,7 +8,6 @@ import { useStore } from '@/store/useStore';
 import {
   Card,
   CardContent,
-  SearchInput,
   Select,
   Table,
   Tabs,

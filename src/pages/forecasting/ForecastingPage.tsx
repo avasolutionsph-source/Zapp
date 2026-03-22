@@ -31,7 +31,6 @@ import {
 import {
   TrendingUp,
   Flame,
-  Snowflake,
   Target,
   BarChart3,
   Save,
@@ -49,9 +48,6 @@ const fmt = (n: number) =>
   n.toLocaleString('en-PH', { maximumFractionDigits: 1 });
 
 const fmtPct = (n: number) => `${(n * 100 - 100).toFixed(0)}%`;
-
-const uid = (): string =>
-  `fc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 const COLORS = {
   orange: '#FF6B00',
@@ -105,7 +101,6 @@ export default function ForecastingPage() {
   const skus = useStore((s) => s.skus);
   const forecasts = useStore((s) => s.forecasts);
   const salesMetrics = useStore((s) => s.salesMetrics);
-  const deliveries = useStore((s) => s.deliveries);
   const endingInventories = useStore((s) => s.endingInventories);
   const saveForecast = useStore((s) => s.saveForecast);
   const currentUser = useStore((s) => s.currentUser);
@@ -330,10 +325,10 @@ export default function ForecastingPage() {
         status: 'submitted',
       };
       saveForecast(updated);
-      addToast({ type: 'success', title: 'Forecast Saved', message: 'Forecast has been submitted successfully.' });
+      addToast('success', 'Forecast has been submitted successfully.');
       setEditedForecasts({});
     } catch {
-      addToast({ type: 'error', title: 'Save Failed', message: 'Could not save forecast. Please try again.' });
+      addToast('error', 'Could not save forecast. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -570,7 +565,7 @@ export default function ForecastingPage() {
                         <YAxis tick={{ fontSize: 11 }} />
                         <Tooltip
                           contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                          formatter={(value: number) => [`P${fmt(value)}`, '']}
+                          formatter={(value: any) => [`P${fmt(Number(value))}`, '']}
                         />
                         <Legend />
                         <Line

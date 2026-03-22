@@ -24,7 +24,6 @@ import {
 } from 'recharts';
 import {
   Trophy,
-  Medal,
   Users,
   DollarSign,
   Filter,
@@ -35,9 +34,6 @@ import {
 // ── Constants ────────────────────────────────────────────────
 
 const COLORS = ['#FF6B00', '#22C55E', '#3B82F6', '#EF4444', '#FFD700', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#14B8A6'];
-
-const fmt = (n: number) =>
-  n.toLocaleString('en-PH', { maximumFractionDigits: 0 });
 
 const fmtCurrency = (n: number) =>
   `P${n.toLocaleString('en-PH', { maximumFractionDigits: 0 })}`;
@@ -67,7 +63,6 @@ export default function LeaderboardPage() {
   const [dateTo, setDateTo] = useState('');
 
   const salesMetrics = useStore((s) => s.salesMetrics);
-  const stores = useStore((s) => s.stores);
   const plants = useStore((s) => s.plants);
   const distributors = useStore((s) => s.distributors);
 
@@ -426,7 +421,7 @@ export default function LeaderboardPage() {
                 />
                 <Tooltip
                   contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
-                  formatter={(value: number) => [fmtCurrency(value), 'SRP Sales']}
+                  formatter={(value: any) => [fmtCurrency(Number(value)), 'SRP Sales']}
                 />
                 <Bar dataKey="srpSales" radius={[0, 6, 6, 0]} name="SRP Sales">
                   {top10ChartData.map((_, idx) => (

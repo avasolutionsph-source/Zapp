@@ -80,7 +80,7 @@ export const authService = {
 
 export const applicationService = {
   submit: async (
-    data: Partial<Application>,
+    _data: Partial<Application>,
   ): Promise<{ success: boolean; applicationId: string }> => {
     await delay();
     maybeError('application.submit');

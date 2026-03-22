@@ -95,7 +95,6 @@ export default function ApplicationsPage() {
 
   // Lookup helpers
   const plantName = (id: string) => plants.find((p) => p.id === id)?.name ?? '-';
-  const distName = (id?: string) => (id ? distributors.find((d) => d.id === id)?.name ?? '-' : '-');
   const amName = (id?: string) => (id ? areaManagers.find((a) => a.id === id)?.name ?? '-' : '-');
 
   const plantOptions: SelectOption[] = [

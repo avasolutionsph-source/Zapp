@@ -50,9 +50,7 @@ export default function EndingInventoryPage() {
   const {
     deliveries,
     stores,
-    beginningInventories,
     addEndingInventory,
-    confirmEndingInventory,
   } = useStore();
 
   // Deliveries that have been delivered (or have beginning inventory)

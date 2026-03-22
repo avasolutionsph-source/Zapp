@@ -25,7 +25,7 @@ import {
   Stat,
 } from '@/components/ui';
 import type { TableColumn } from '@/components/ui';
-import type { Delivery, BillingRecord } from '@/types';
+import type { Delivery } from '@/types';
 
 export default function StoreDetailPage() {
   const { id } = useParams<{ id: string }>();

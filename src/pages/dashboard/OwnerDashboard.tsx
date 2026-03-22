@@ -15,7 +15,6 @@ import {
   Store as StoreIcon,
   BarChart3,
   Package,
-  FileText,
   CheckCircle,
   Clock,
 } from 'lucide-react';
@@ -46,7 +45,6 @@ export function OwnerDashboard() {
   const plants = useStore((s) => s.plants);
   const distributors = useStore((s) => s.distributors);
   const applications = useStore((s) => s.applications);
-  const payments = useStore((s) => s.payments);
   const billingRecords = useStore((s) => s.billingRecords);
   const packagingOrders = useStore((s) => s.packagingOrders);
 
@@ -283,7 +281,7 @@ export function OwnerDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Line
                   type="monotone"
                   dataKey="sales"
@@ -308,7 +306,7 @@ export function OwnerDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Bar dataKey="sales" fill="#FF6B00" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -329,7 +327,7 @@ export function OwnerDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <YAxis type="category" dataKey="area" tick={{ fontSize: 11 }} width={120} />
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Bar dataKey="sales" fill="#2563EB" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -352,14 +350,14 @@ export function OwnerDashboard() {
                   outerRadius={120}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, pct }) => `${name} (${pct}%)`}
+                  label={(entry: any) => `${entry.name} (${entry.pct}%)`}
                   labelLine
                 >
                   {salesByProvince.map((_entry, index) => (
                     <Cell key={index} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => [`P${value.toLocaleString()}`, 'SRP Sales']} />
+                <Tooltip formatter={(value: any) => [`P${Number(value).toLocaleString()}`, 'SRP Sales']} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

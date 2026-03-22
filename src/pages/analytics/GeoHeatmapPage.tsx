@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/Skeleton';
-import type { Store as StoreType, Application, SalesMetric } from '@/types';
 import {
   MapPin,
   Store as StoreIcon,

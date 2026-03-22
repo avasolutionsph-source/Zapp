@@ -12,7 +12,6 @@ import {
   Receipt,
   CheckCircle2,
   XCircle,
-  Clock,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import {
@@ -23,10 +22,8 @@ import {
   Badge,
   StatusBadge,
   Modal,
-  Input,
   ConfirmDialog,
   EmptyState,
-  Skeleton,
 } from '@/components/ui';
 
 export default function ApplicationDetailPage() {
