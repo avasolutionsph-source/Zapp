@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Hash,
-  Donut,
   Handshake,
   Zap,
   Building2,
@@ -102,9 +101,7 @@ export default function ReferralEntryPage() {
             </button>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zapp-orange">
-              <Donut size={20} className="text-white" />
-            </div>
+            <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-10 w-10 rounded-lg object-cover" />
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Referral Verification</h1>
               <p className="text-sm text-gray-500">Verify your referral code to start your application.</p>

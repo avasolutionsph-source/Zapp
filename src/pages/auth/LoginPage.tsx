@@ -64,7 +64,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="text-center mb-8">
-          <span className="text-5xl block mb-3">🍩</span>
+          <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-20 w-20 rounded-2xl object-cover mx-auto mb-3" />
           <h1 className="text-3xl font-bold text-zapp-brown tracking-tight">
             ZAPP Donuts
           </h1>

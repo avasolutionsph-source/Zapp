@@ -11,7 +11,6 @@ import {
   Store as StoreIcon,
   Phone,
   Mail,
-  Donut,
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
@@ -154,9 +153,7 @@ export default function StoreDirectoryPage() {
             </button>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zapp-orange">
-              <Donut size={20} className="text-white" />
-            </div>
+            <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-10 w-10 rounded-lg object-cover" />
             <div>
               <h1 className="text-2xl font-bold text-gray-900">ZAPP Donuts Store Directory</h1>
               <p className="text-sm text-gray-500">

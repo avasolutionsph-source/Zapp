@@ -304,7 +304,7 @@ export function Sidebar() {
             onClick={() => navigate('/dashboard')}
             className="flex items-center gap-2.5 cursor-pointer bg-transparent border-none"
           >
-            <span className="text-2xl">🍩</span>
+            <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-9 w-9 rounded-lg object-cover" />
             <div>
               <h1 className="text-lg font-bold text-white leading-tight tracking-tight">
                 ZAPP Donuts

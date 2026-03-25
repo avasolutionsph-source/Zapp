@@ -4,7 +4,6 @@
 
 import { useNavigate } from 'react-router-dom';
 import {
-  Donut,
   ClipboardCheck,
   UserCheck,
   Truck,
@@ -50,9 +49,7 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-40 border-b border-orange-100 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zapp-orange">
-              <Donut size={20} className="text-white" />
-            </div>
+            <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-9 w-9 rounded-lg object-cover" />
             <span className="text-lg font-bold text-zapp-brown">
               ZAPP <span className="text-zapp-orange">Donuts</span>
             </span>
@@ -65,10 +62,7 @@ export default function LandingPage() {
             <a href="#how-it-works" className="text-sm font-medium text-gray-600 hover:text-zapp-orange transition-colors">
               How It Works
             </a>
-            <a href="#models" className="text-sm font-medium text-gray-600 hover:text-zapp-orange transition-colors">
-              Franchise Models
-            </a>
-            <a href="#plants" className="text-sm font-medium text-gray-600 hover:text-zapp-orange transition-colors">
+<a href="#plants" className="text-sm font-medium text-gray-600 hover:text-zapp-orange transition-colors">
               Our Plants
             </a>
           </div>
@@ -190,12 +184,11 @@ export default function LandingPage() {
               deliveries to franchise stores across the nation.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              We offer two franchise models: <strong>Distributor-Linked</strong> franchises that leverage our
-              partner distributors for logistics and support, and <strong>Direct to ZAPP</strong> franchises
-              for owners who prefer a direct relationship with our operations team.
+              We partner with franchisees to provide a seamless and scalable business experience, backed by
+              reliable logistics, consistent product quality, and strong operational support.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              What sets us apart is our <strong>AI-assisted operations platform</strong> -- a modern ERP
+              What sets us apart is our <strong>AI-assisted operations platform</strong> — a modern ERP
               system that handles inventory counting via image recognition, automated billing reconciliation,
               demand forecasting, and real-time sales analytics. Franchise owners spend less time on
               paperwork and more time growing their business.
@@ -295,124 +288,6 @@ export default function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-gray-500">{item.desc}</p>
             </div>
           ))}
-        </div>
-      </Section>
-
-      {/* ─── Franchise Models ──────────────────────────────── */}
-      <Section id="models" className="py-20 lg:py-28">
-        <div className="text-center">
-          <span className="text-sm font-bold uppercase tracking-wider text-zapp-orange">
-            Franchise Models
-          </span>
-          <h2 className="mt-3 text-3xl font-bold text-gray-900 sm:text-4xl">
-            Choose Your Franchise Path
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-            We offer two flexible franchise models tailored to different business preferences and levels
-            of involvement.
-          </p>
-        </div>
-
-        <div className="mt-16 grid gap-8 lg:grid-cols-2">
-          {/* Distributor-Linked */}
-          <div className="relative overflow-hidden rounded-2xl border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white p-8 lg:p-10">
-            <div className="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-orange-100/50" />
-            <div className="relative">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-zapp-orange">
-                <Handshake size={14} />
-                MOST POPULAR
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">Distributor-Linked Franchise</h3>
-              <p className="mt-3 text-gray-600">
-                Partner with one of our authorized distributors who handles product logistics, delivery
-                coordination, and operational support for your store.
-              </p>
-
-              <div className="mt-6 rounded-xl bg-white p-5 shadow-sm">
-                <div className="text-3xl font-extrabold text-zapp-orange">15%</div>
-                <div className="text-sm font-medium text-gray-500">Guaranteed Profit Margin</div>
-              </div>
-
-              <ul className="mt-6 space-y-3">
-                {[
-                  'Distributor handles all logistics and deliveries',
-                  'Assigned area manager for mentoring and support',
-                  'Lower operational overhead -- focus on selling',
-                  'Referral code from distributor partner required',
-                  'Daily delivery reconciliation via AI system',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-gray-600">
-                    <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100">
-                      <svg className="h-3 w-3 text-green-600" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                variant="primary"
-                size="lg"
-                fullWidth
-                className="mt-8"
-                onClick={() => navigate('/apply')}
-              >
-                Apply as Distributor Franchise
-              </Button>
-            </div>
-          </div>
-
-          {/* Direct to ZAPP */}
-          <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 lg:p-10">
-            <div className="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-gray-50" />
-            <div className="relative">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">
-                <Zap size={14} />
-                DIRECT RELATIONSHIP
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">Direct to ZAPP Franchise</h3>
-              <p className="mt-3 text-gray-600">
-                Work directly with ZAPP operations. You receive deliveries straight from the plant and
-                manage your store with full autonomy and higher margins.
-              </p>
-
-              <div className="mt-6 rounded-xl bg-gray-50 p-5">
-                <div className="text-3xl font-extrabold text-zapp-brown">Gross - DR</div>
-                <div className="text-sm font-medium text-gray-500">Keep Revenue Minus DR Cost</div>
-              </div>
-
-              <ul className="mt-6 space-y-3">
-                {[
-                  'Direct relationship with ZAPP operations team',
-                  'Higher profit potential -- keep gross minus DR cost',
-                  'ZAPP internal referral code required',
-                  'More operational responsibility on franchise owner',
-                  'Full access to ERP platform and AI tools',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-gray-600">
-                    <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100">
-                      <svg className="h-3 w-3 text-blue-600" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                variant="outline"
-                size="lg"
-                fullWidth
-                className="mt-8"
-                onClick={() => navigate('/apply')}
-              >
-                Apply as Direct Franchise
-              </Button>
-            </div>
-          </div>
         </div>
       </Section>
 
@@ -536,9 +411,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zapp-orange">
-                <Donut size={16} className="text-white" />
-              </div>
+              <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-8 w-8 rounded-lg object-cover" />
               <span className="text-sm font-bold text-gray-900">ZAPP Donuts ERP</span>
             </div>
             <div className="flex items-center gap-6">

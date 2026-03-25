@@ -21,7 +21,7 @@ export default function PublicLayout() {
               to="/"
               className="flex items-center gap-2.5 no-underline"
             >
-              <span className="text-2xl">🍩</span>
+              <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-9 w-9 rounded-lg object-cover" />
               <span className="text-xl font-bold text-zapp-brown tracking-tight">
                 ZAPP Donuts
               </span>
@@ -66,7 +66,7 @@ export default function PublicLayout() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-lg">🍩</span>
+              <img src="/Logo.jpg" alt="ZAPP Donuts" className="h-7 w-7 rounded-lg object-cover" />
               <span className="text-sm font-semibold text-zapp-brown">
                 ZAPP Donuts
               </span>
