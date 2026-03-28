@@ -47,6 +47,9 @@ import PaymentsPage from '@/pages/payments/PaymentsPage'
 // Packaging
 import PackagingPage from '@/pages/packaging/PackagingPage'
 
+// Special Orders
+import SpecialOrdersPage from '@/pages/specialorders/SpecialOrdersPage'
+
 // Forecasting
 import ForecastingPage from '@/pages/forecasting/ForecastingPage'
 
@@ -105,6 +108,7 @@ function App() {
         <Route path="/billing" element={<BillingPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
         <Route path="/packaging" element={<PackagingPage />} />
+        <Route path="/special-orders" element={<SpecialOrdersPage />} />
 
         {/* Forecasting */}
         <Route path="/forecasting" element={<ForecastingPage />} />

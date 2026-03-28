@@ -35,6 +35,8 @@ export type ConfidenceLevel = 'high' | 'medium' | 'low';
 
 export type BillingStatus = 'pending' | 'issued' | 'paid' | 'overdue';
 
+export type StoreDeliveryStatus = 'active' | 'warning' | 'hold';
+
 export type PaymentMethod = 'gateway' | 'manual';
 
 export type PaymentStatus = 'submitted' | 'verified' | 'rejected';
@@ -83,7 +85,7 @@ export interface Distributor {
   status: DistributorStatus;
 }
 
-export interface AreaManager {
+export interface AreaSupervisor {
   id: string;
   name: string;
   email: string;
@@ -103,7 +105,7 @@ export interface Store {
   lng: number;
   plantId: string;
   distributorId?: string;
-  areaManagerId: string;
+  areaSupervisorId: string;
   franchiseType: FranchiseType;
   status: StoreStatus;
   province: string;
@@ -111,6 +113,7 @@ export interface Store {
   phone: string;
   email: string;
   createdAt: string;
+  deliveryStatus: StoreDeliveryStatus;
 }
 
 // --- Applications ---
@@ -138,7 +141,7 @@ export interface Application {
   referralCode: string;
   referralType: ReferralType;
   assignedDistributorId?: string;
-  assignedAreaManagerId?: string;
+  assignedAreaSupervisorId?: string;
   assignedPlantId: string;
   status: ApplicationStatus;
   submittedAt: string;
@@ -245,6 +248,11 @@ export interface BillingRecord {
   paymentProofUrl?: string;
   verifiedBy?: string;
   invoiceFileUrl?: string;
+  srpTotal: number;
+  soldQty: number;
+  franchiseeProfit: number;
+  remitToPD: number;
+  cutoffPeriod: string;
 }
 
 export interface Payment {
@@ -317,7 +325,7 @@ export interface ReferralCode {
   code: string;
   type: ReferralType;
   distributorId?: string;
-  areaManagerId?: string;
+  areaSupervisorId?: string;
   plantId: string;
   status: ReferralCodeStatus;
   createdAt: string;
@@ -349,6 +357,30 @@ export interface Notification {
   read: boolean;
   createdAt: string;
   targetRole?: UserRole;
+}
+
+// --- Special Orders ---
+
+export type SpecialOrderStatus = 'sold';
+
+export interface SpecialOrderItem {
+  skuId: string;
+  skuName: string;
+  quantity: number;
+  drPrice: number;
+  srpPrice: number;
+}
+
+export interface SpecialOrder {
+  id: string;
+  storeId: string;
+  date: string;
+  items: SpecialOrderItem[];
+  totalDR: number;
+  totalSRP: number;
+  status: SpecialOrderStatus;
+  notes?: string;
+  createdAt: string;
 }
 
 // --- Geo helpers ---

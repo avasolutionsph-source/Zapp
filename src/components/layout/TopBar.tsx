@@ -21,7 +21,7 @@ const routeTitles: Record<string, string> = {
   '/stores': 'Stores',
   '/franchisees': 'Franchisees',
   '/distributors': 'Distributors',
-  '/area-managers': 'Area Managers',
+  '/area-managers': 'Area Supervisors',
   '/plants': 'Plants',
   '/deliveries': 'Deliveries',
   '/beginning-inventory': 'Beginning Inventory',
@@ -40,14 +40,14 @@ const routeTitles: Record<string, string> = {
 
 const roleLabels: Record<UserRole, string> = {
   owner: 'Owner',
-  operations_manager: 'Operations Manager',
+  operations_manager: 'Operations Supervisor',
   forecaster: 'Forecaster',
   plant_manager: 'Plant Manager',
   billing_user: 'Billing User',
   partner_distributor: 'Partner Distributor',
   franchisee_distributor: 'Franchisee (Distributor)',
   franchisee_direct: 'Franchisee (Direct)',
-  area_manager: 'Area Manager',
+  area_manager: 'Area Supervisor',
 };
 
 const allRoles: UserRole[] = [

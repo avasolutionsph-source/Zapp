@@ -53,7 +53,7 @@ const STATUS_OPTIONS: SelectOption[] = [
 
 export default function StoreDirectoryPage() {
   const navigate = useNavigate();
-  const { stores, plants, distributors, areaManagers } = useStore();
+  const { stores, plants, distributors, areaSupervisors } = useStore();
 
   // Filters
   const [search, setSearch] = useState('');
@@ -129,8 +129,8 @@ export default function StoreDirectoryPage() {
   const getPlantName = (plantId: string) => plants.find((p) => p.id === plantId)?.name ?? plantId;
   const getDistributorName = (distId?: string) =>
     distId ? distributors.find((d) => d.id === distId)?.name ?? '' : 'N/A (Direct)';
-  const getAreaManagerName = (amId: string) =>
-    areaManagers.find((a) => a.id === amId)?.name ?? '';
+  const getAreaSupervisorName = (amId: string) =>
+    areaSupervisors.find((a) => a.id === amId)?.name ?? '';
 
   // Reset page when filters change
   const handleFilterChange = (setter: (val: string) => void) => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -498,7 +498,7 @@ export default function StoreDirectoryPage() {
               </div>
             </div>
 
-            {/* Distributor / Area Manager */}
+            {/* Distributor / Area Supervisor */}
             <div className="grid gap-4 sm:grid-cols-2">
               {selectedStore.distributorId && (
                 <div className="rounded-lg border border-orange-100 bg-orange-50/50 p-4">
@@ -513,10 +513,10 @@ export default function StoreDirectoryPage() {
 
               <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-wider text-blue-400">
-                  Area Manager
+                  Area Supervisor
                 </div>
                 <p className="mt-1 text-sm font-medium text-gray-900">
-                  {getAreaManagerName(selectedStore.areaManagerId) || 'Not assigned'}
+                  {getAreaSupervisorName(selectedStore.areaSupervisorId) || 'Not assigned'}
                 </p>
               </div>
             </div>

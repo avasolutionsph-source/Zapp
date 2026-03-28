@@ -39,7 +39,7 @@ import {
 import type { SelectOption, UploadedFile } from '@/components/ui';
 import { useStore } from '@/store/useStore';
 import { referralService } from '@/services/api';
-import type { ReferralCode, Distributor, AreaManager, Plant } from '@/types';
+import type { ReferralCode, Distributor, AreaSupervisor, Plant } from '@/types';
 
 // ── Philippine provinces & cities for selects ─────────────────
 
@@ -124,7 +124,7 @@ const STEPS = [
 interface ReferralInfo {
   referral: ReferralCode;
   distributor?: Distributor;
-  areaManager?: AreaManager;
+  areaSupervisor?: AreaSupervisor;
   plant?: Plant;
 }
 
@@ -226,7 +226,7 @@ export default function ApplicationPage() {
         setReferralInfo({
           referral: result.referral,
           distributor: result.distributor,
-          areaManager: result.areaManager,
+          areaSupervisor: result.areaSupervisor,
           plant: result.plant,
         });
         setReferralError('');
@@ -249,8 +249,10 @@ export default function ApplicationPage() {
 
     switch (currentStep) {
       case 0:
-        if (!referralInfo) {
-          newErrors.referralCode = 'Please validate your referral code before proceeding.';
+        if (!form.referralCode.trim()) {
+          newErrors.referralCode = 'Valid referral code is required.';
+        } else if (!referralInfo) {
+          newErrors.referralCode = 'Valid referral code is required. Please validate your code before proceeding.';
         }
         break;
 
@@ -327,7 +329,7 @@ export default function ApplicationPage() {
         referralCode: form.referralCode,
         referralType: referralInfo.referral.type,
         assignedDistributorId: referralInfo.distributor?.id,
-        assignedAreaManagerId: referralInfo.areaManager?.id,
+        assignedAreaSupervisorId: referralInfo.areaSupervisor?.id,
         assignedPlantId: referralInfo.referral.plantId,
       });
       setShowSuccess(true);
@@ -395,14 +397,15 @@ export default function ApplicationPage() {
             <div>
               <h2 className="text-xl font-bold text-gray-900">Enter Your Referral Code</h2>
               <p className="mt-1 text-sm text-gray-500">
-                You need a valid referral code from a ZAPP distributor or internal representative to apply.
+                A valid referral code is required to submit your application. Obtain one from a ZAPP distributor or internal representative.
               </p>
             </div>
 
             <div className="flex gap-3">
               <Input
-                label="Referral Code"
+                label="Referral Code *"
                 placeholder="e.g. BICOL-MARCO or ZAPP-INT-001"
+                required
                 value={form.referralCode}
                 onChange={(e) => {
                   updateForm('referralCode', e.target.value);
@@ -469,13 +472,13 @@ export default function ApplicationPage() {
                       </p>
                     </div>
                   )}
-                  {referralInfo.areaManager && (
+                  {referralInfo.areaSupervisor && (
                     <div>
                       <span className="text-xs font-semibold uppercase tracking-wider text-green-600">
-                        Area Manager
+                        Area Supervisor
                       </span>
                       <p className="mt-0.5 text-sm font-medium text-gray-900">
-                        {referralInfo.areaManager.name}
+                        {referralInfo.areaSupervisor.name}
                       </p>
                     </div>
                   )}

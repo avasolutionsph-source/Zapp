@@ -11,7 +11,7 @@ import type {
   Store,
   Application,
   Distributor,
-  AreaManager,
+  AreaSupervisor,
   Delivery,
   BeginningInventory,
   EndingInventory,
@@ -25,6 +25,7 @@ import type {
   SalesMetric,
   Notification,
   AuditEntry,
+  SpecialOrder,
 } from '@/types';
 import {
   demoUsers,
@@ -33,7 +34,7 @@ import {
   stores as mockStores,
   applications as mockApplications,
   distributors as mockDistributors,
-  areaManagers as mockAreaManagers,
+  areaSupervisors as mockAreaSupervisors,
   deliveries as mockDeliveries,
   beginningInventories as mockBeginningInventories,
   endingInventories as mockEndingInventories,
@@ -45,6 +46,7 @@ import {
   referralCodes as mockReferralCodes,
   salesMetrics as mockSalesMetrics,
   notifications as mockNotifications,
+  specialOrders as mockSpecialOrders,
 } from '@/data/mockData';
 
 // ── Helpers ─────────────────────────────────────────────────────────
@@ -91,8 +93,12 @@ interface AppStore {
   // Distributors
   distributors: Distributor[];
 
-  // Area Managers
-  areaManagers: AreaManager[];
+  // Area Supervisors
+  areaSupervisors: AreaSupervisor[];
+
+  // Delivery enforcement
+  requestStopDelivery: (storeId: string) => void;
+  resumeDelivery: (storeId: string) => void;
 
   // Deliveries
   deliveries: Delivery[];
@@ -155,6 +161,10 @@ interface AppStore {
   // Demo users list
   demoUsers: User[];
 
+  // Special Orders
+  specialOrders: SpecialOrder[];
+  addSpecialOrder: (order: Omit<SpecialOrder, 'id'>) => void;
+
   // Filtered data helpers
   getStoresForCurrentUser: () => Store[];
   getDeliveriesForCurrentUser: () => Delivery[];
@@ -211,6 +221,24 @@ export const useStore = create<AppStore>((set, get) => ({
   updateStore: (id: string, updates: Partial<Store>) => {
     set((s) => ({
       stores: s.stores.map((st) => (st.id === id ? { ...st, ...updates } : st)),
+    }));
+  },
+
+  // ─── Delivery Enforcement ─────────────────────────────────────
+
+  requestStopDelivery: (storeId: string) => {
+    set((s) => ({
+      stores: s.stores.map((st) =>
+        st.id === storeId ? { ...st, deliveryStatus: 'hold' as const } : st,
+      ),
+    }));
+  },
+
+  resumeDelivery: (storeId: string) => {
+    set((s) => ({
+      stores: s.stores.map((st) =>
+        st.id === storeId ? { ...st, deliveryStatus: 'active' as const } : st,
+      ),
     }));
   },
 
@@ -284,7 +312,7 @@ export const useStore = create<AppStore>((set, get) => ({
             lng: approvedApp.lng,
             plantId: approvedApp.assignedPlantId,
             distributorId: approvedApp.assignedDistributorId,
-            areaManagerId: approvedApp.assignedAreaManagerId ?? '',
+            areaSupervisorId: approvedApp.assignedAreaSupervisorId ?? '',
             franchiseType: approvedApp.referralType === 'distributor' ? 'distributor' : 'direct',
             status: 'pending',
             province: '',
@@ -305,9 +333,9 @@ export const useStore = create<AppStore>((set, get) => ({
 
   distributors: mockDistributors,
 
-  // ─── Area Managers ─────────────────────────────────────────────
+  // ─── Area Supervisors ─────────────────────────────────────────────
 
-  areaManagers: mockAreaManagers,
+  areaSupervisors: mockAreaSupervisors,
 
   // ─── Deliveries ────────────────────────────────────────────────
 
@@ -499,6 +527,18 @@ export const useStore = create<AppStore>((set, get) => ({
 
   demoUsers,
 
+  // ─── Special Orders ───────────────────────────────────────────
+
+  specialOrders: mockSpecialOrders,
+
+  addSpecialOrder: (order: Omit<SpecialOrder, 'id'>) => {
+    const newOrder: SpecialOrder = {
+      ...order,
+      id: `so-${uid()}`,
+    };
+    set((s) => ({ specialOrders: [...s.specialOrders, newOrder] }));
+  },
+
   // ─── Filtered Data Helpers ────────────────────────────────────
 
   getStoresForCurrentUser: (): Store[] => {
@@ -523,7 +563,7 @@ export const useStore = create<AppStore>((set, get) => ({
         return stores.filter(
           (s) =>
             currentUser.assignedStoreIds?.includes(s.id) ||
-            currentUser.areaIds?.includes(s.areaManagerId),
+            currentUser.areaIds?.includes(s.areaSupervisorId),
         );
 
       case 'franchisee_direct':

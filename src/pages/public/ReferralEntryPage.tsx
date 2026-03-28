@@ -19,14 +19,14 @@ import {
 } from 'lucide-react';
 import { Button, Card, CardContent, Input, Badge } from '@/components/ui';
 import { referralService } from '@/services/api';
-import type { ReferralCode, Distributor, AreaManager, Plant } from '@/types';
+import type { ReferralCode, Distributor, AreaSupervisor, Plant } from '@/types';
 
 // ── Types ─────────────────────────────────────────────────────
 
 interface ReferralInfo {
   referral: ReferralCode;
   distributor?: Distributor;
-  areaManager?: AreaManager;
+  areaSupervisor?: AreaSupervisor;
   plant?: Plant;
 }
 
@@ -66,7 +66,7 @@ export default function ReferralEntryPage() {
         setReferralInfo({
           referral: result.referral,
           distributor: result.distributor,
-          areaManager: result.areaManager,
+          areaSupervisor: result.areaSupervisor,
           plant: result.plant,
         });
       } else {
@@ -195,17 +195,17 @@ export default function ReferralEntryPage() {
                     </div>
                   )}
 
-                  {referralInfo.areaManager && (
+                  {referralInfo.areaSupervisor && (
                     <div className="rounded-lg border border-green-200 bg-white p-4">
                       <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
                         <User size={12} />
-                        Assigned Area Manager
+                        Assigned Area Supervisor
                       </div>
                       <p className="mt-1 text-sm font-bold text-gray-900">
-                        {referralInfo.areaManager.name}
+                        {referralInfo.areaSupervisor.name}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Areas: {referralInfo.areaManager.assignedAreas.join(', ')}
+                        Areas: {referralInfo.areaSupervisor.assignedAreas.join(', ')}
                       </p>
                     </div>
                   )}

@@ -40,6 +40,7 @@ import {
   Factory,
   History,
   Calculator,
+  AlertOctagon,
 } from 'lucide-react';
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -207,6 +208,19 @@ export default function ForecastingPage() {
 
     return { avgSales, totalForecast, hotCount, weakCount, accuracy };
   }, [forecastItems, currentForecast]);
+
+  // ── Sold-Out Detection ──────────────────────────────────────────
+  // Items where actualSold == delivered qty (finalForecast) indicate potential stockouts
+
+  const soldOutItems = useMemo(() => {
+    if (!forecastItems.length) return [];
+    return forecastItems.filter(
+      (fi) =>
+        fi.actualSold !== undefined &&
+        fi.actualSold > 0 &&
+        fi.actualSold >= fi.finalForecast,
+    );
+  }, [forecastItems]);
 
   // ── Daily sales trend chart data ──────────────────────────────
 
@@ -547,6 +561,45 @@ export default function ForecastingPage() {
                 change={summaryKPIs.accuracy > 0 ? 1.5 : undefined}
               />
             </div>
+
+            {/* Sold-Out Detection */}
+            {soldOutItems.length > 0 && (
+              <Card className="border-l-4 border-l-red-500">
+                <CardContent className="py-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
+                      <AlertOctagon size={20} className="text-red-500" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-gray-900">Sold-Out Detection</h4>
+                        <Badge variant="danger" size="sm">
+                          {soldOutItems.length} item{soldOutItems.length > 1 ? 's' : ''} detected
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {soldOutItems.length} item{soldOutItems.length > 1 ? 's' : ''} detected as frequently sold out in the last 14 days.
+                        These items sold equal to or more than the forecasted delivery quantity, indicating potential stockouts and lost sales.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {soldOutItems.map((item) => (
+                          <div
+                            key={item.skuId}
+                            className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5"
+                          >
+                            <span className="text-sm font-medium text-gray-900">{item.skuName}</span>
+                            <Badge variant="danger" size="sm">Frequently Sold Out</Badge>
+                            <span className="text-xs text-gray-500">
+                              ({item.actualSold}/{item.finalForecast})
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Charts Row */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

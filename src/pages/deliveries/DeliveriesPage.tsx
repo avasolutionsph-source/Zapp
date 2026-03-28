@@ -3,6 +3,9 @@ import {
   Truck,
   Package,
   Eye,
+  AlertTriangle,
+  Ban,
+  Play,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import {
@@ -33,9 +36,57 @@ export default function DeliveriesPage() {
     getDeliveriesForCurrentUser,
     stores,
     plants,
+    billingRecords,
+    currentUser,
+    requestStopDelivery,
+    resumeDelivery,
   } = useStore();
 
   const allDeliveries = getDeliveriesForCurrentUser();
+
+  // ── Delivery Enforcement: compute store payment issues ──
+  const enforcementRoles = ['partner_distributor', 'area_manager', 'operations_manager', 'owner'];
+  const canViewEnforcement = currentUser && enforcementRoles.includes(currentUser.role);
+  const canManageEnforcement = currentUser && ['area_manager', 'operations_manager', 'owner'].includes(currentUser.role);
+
+  const storesWithIssues = useMemo(() => {
+    if (!canViewEnforcement) return [];
+
+    // Group billing records by store, sorted by period descending
+    const storeMap = new Map<string, { unpaidCount: number; storeName: string; deliveryStatus?: string }>();
+
+    for (const store of stores) {
+      const storeRecords = billingRecords
+        .filter((b) => b.storeId === store.id)
+        .sort((a, b) => b.period.localeCompare(a.period));
+
+      // Count consecutive unpaid billing cycles from most recent
+      let unpaidCount = 0;
+      for (const record of storeRecords) {
+        if (record.status !== 'paid') {
+          unpaidCount++;
+        } else {
+          break;
+        }
+      }
+
+      if (unpaidCount >= 1) {
+        storeMap.set(store.id, {
+          unpaidCount,
+          storeName: store.name,
+          deliveryStatus: (store as Record<string, unknown>).deliveryStatus as string | undefined,
+        });
+      }
+    }
+
+    return Array.from(storeMap.entries()).map(([storeId, data]) => ({
+      storeId,
+      storeName: data.storeName,
+      unpaidCount: data.unpaidCount,
+      level: data.unpaidCount >= 2 ? 'hold' as const : 'warning' as const,
+      deliveryStatus: data.deliveryStatus,
+    }));
+  }, [canViewEnforcement, stores, billingRecords]);
 
   const [activeTab, setActiveTab] = useState('all');
   const [plantFilter, setPlantFilter] = useState('');
@@ -148,6 +199,70 @@ export default function DeliveriesPage() {
         <h1 className="text-2xl font-bold text-gray-900">Delivery Management</h1>
         <p className="text-sm text-gray-500 mt-1">Track and manage all store deliveries</p>
       </div>
+
+      {/* Delivery Enforcement Section */}
+      {canViewEnforcement && storesWithIssues.length > 0 && (
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardContent>
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle size={18} className="text-amber-600" />
+              <h2 className="text-sm font-semibold text-amber-900">
+                Delivery Enforcement - Stores with Payment Issues ({storesWithIssues.length})
+              </h2>
+            </div>
+            <div className="space-y-2">
+              {storesWithIssues.map((issue) => (
+                <div
+                  key={issue.storeId}
+                  className={`flex items-center justify-between rounded-lg px-4 py-3 ${
+                    issue.level === 'hold'
+                      ? 'bg-red-50 border border-red-200'
+                      : 'bg-yellow-50 border border-yellow-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {issue.level === 'hold' ? (
+                      <Ban size={16} className="text-red-600" />
+                    ) : (
+                      <AlertTriangle size={16} className="text-yellow-600" />
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{issue.storeName}</p>
+                      <p className="text-xs text-gray-500">
+                        {issue.unpaidCount} unpaid billing cycle{issue.unpaidCount > 1 ? 's' : ''} -{' '}
+                        {issue.level === 'hold' ? (
+                          <span className="text-red-600 font-medium">Hold (delivery stop recommended)</span>
+                        ) : (
+                          <span className="text-yellow-600 font-medium">Warning</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  {canManageEnforcement && (
+                    <div>
+                      {issue.deliveryStatus === 'hold' ? (
+                        <button
+                          onClick={() => resumeDelivery(issue.storeId)}
+                          className="inline-flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 transition-colors cursor-pointer border-none"
+                        >
+                          <Play size={12} /> Resume Delivery
+                        </button>
+                      ) : issue.level === 'hold' ? (
+                        <button
+                          onClick={() => requestStopDelivery(issue.storeId)}
+                          className="inline-flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 transition-colors cursor-pointer border-none"
+                        >
+                          <Ban size={12} /> Request Stop Delivery
+                        </button>
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

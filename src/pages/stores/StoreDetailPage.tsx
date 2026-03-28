@@ -34,7 +34,7 @@ export default function StoreDetailPage() {
     stores,
     plants,
     distributors,
-    areaManagers,
+    areaSupervisors,
     deliveries,
     billingRecords,
     salesMetrics,
@@ -46,8 +46,8 @@ export default function StoreDetailPage() {
   const distributor = store?.distributorId
     ? distributors.find((d) => d.id === store.distributorId)
     : null;
-  const areaManager = store
-    ? areaManagers.find((a) => a.id === store.areaManagerId)
+  const areaSupervisor = store
+    ? areaSupervisors.find((a) => a.id === store.areaSupervisorId)
     : null;
 
   const storeDeliveries = useMemo(
@@ -92,6 +92,14 @@ export default function StoreDetailPage() {
   const totalDR = storeMetrics.reduce((s, m) => s + m.drSales, 0);
   const totalSRP = storeMetrics.reduce((s, m) => s + m.srpSales, 0);
   const avgDaily = storeMetrics.length > 0 ? Math.round(totalSRP / Math.max(storeMetrics.length, 1)) : 0;
+
+  // Dual billing financials
+  const billingSRP = storeBilling.reduce((s, b) => s + b.srpTotal, 0);
+  const billingFranchiseeProfit = storeBilling.reduce((s, b) => s + b.franchiseeProfit, 0);
+  const billingRemitToPD = storeBilling.reduce((s, b) => s + b.remitToPD, 0);
+  const billingDRTotal = storeBilling.reduce((s, b) => s + b.drTotal, 0);
+  const billingPackaging = storeBilling.reduce((s, b) => s + b.packagingTotal, 0);
+  const billingPayable = storeBilling.reduce((s, b) => s + b.totalPayable, 0);
 
   const latestBilling = storeBilling[0];
   const isBlocked = store.status === 'blocked';
@@ -139,10 +147,56 @@ export default function StoreDetailPage() {
 
       {/* Financial Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat icon={<DollarSign size={18} />} label="DR Sales (Total)" value={`P${totalDR.toLocaleString()}`} />
-        <Stat icon={<DollarSign size={18} />} label="SRP Sales (Total)" value={`P${totalSRP.toLocaleString()}`} />
+        <Stat icon={<DollarSign size={18} />} label="Total SRP Sales" value={`P${billingSRP.toLocaleString()}`} />
+        <Stat icon={<DollarSign size={18} />} label="Total DR Sales (ref)" value={`P${billingDRTotal.toLocaleString()}`} />
         <Stat icon={<Calendar size={18} />} label="Avg Daily SRP" value={`P${avgDaily.toLocaleString()}`} />
         <Stat icon={<Truck size={18} />} label="Total Deliveries" value={storeDeliveries.length} />
+      </div>
+
+      {/* Dual Billing Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-gray-900">Store Remittance (SRP-Based)</h2>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total SRP Sales</span>
+                <span className="font-semibold text-gray-900">P{billingSRP.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-green-600">15% Franchisee Profit</span>
+                <span className="font-semibold text-green-600">P{billingFranchiseeProfit.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm border-t border-gray-100 pt-2">
+                <span className="font-bold text-gray-900">Remit to PD (85%)</span>
+                <span className="font-bold text-indigo-600">P{billingRemitToPD.toLocaleString()}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-gray-900">Zapp Billing (DR-Based)</h2>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">DR Total</span>
+                <span className="font-semibold text-gray-900">P{billingDRTotal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-blue-600">Packaging Charges</span>
+                <span className="font-semibold text-blue-600">P{billingPackaging.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm border-t border-gray-100 pt-2">
+                <span className="font-bold text-gray-900">Zapp Billing Total</span>
+                <span className="font-bold text-zapp-orange">P{billingPayable.toLocaleString()}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -209,8 +263,8 @@ export default function StoreDetailPage() {
                 <dd className="mt-1 text-sm text-gray-700">{distributor?.name ?? 'N/A (Direct)'}</dd>
               </div>
               <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Area Manager</dt>
-                <dd className="mt-1 text-sm text-gray-700">{areaManager?.name ?? '-'}</dd>
+                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Area Supervisor</dt>
+                <dd className="mt-1 text-sm text-gray-700">{areaSupervisor?.name ?? '-'}</dd>
               </div>
               <div>
                 <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Franchise Type</dt>

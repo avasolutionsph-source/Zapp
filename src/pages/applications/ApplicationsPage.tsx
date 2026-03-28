@@ -27,11 +27,28 @@ const PAGE_SIZE = 10;
 export default function ApplicationsPage() {
   const navigate = useNavigate();
   const {
-    applications,
+    applications: allApplications,
     plants,
     distributors,
-    areaManagers,
+    areaSupervisors,
+    currentUser,
   } = useStore();
+
+  // Area supervisors only see applications assigned to their area
+  const applications = useMemo(() => {
+    if (currentUser?.role === 'area_manager') {
+      const myAreaSupervisor = areaSupervisors.find(
+        (as_) => as_.id === currentUser.id || as_.name === currentUser.name,
+      );
+      if (myAreaSupervisor) {
+        return allApplications.filter(
+          (a) => a.assignedAreaSupervisorId === myAreaSupervisor.id,
+        );
+      }
+      return [];
+    }
+    return allApplications;
+  }, [allApplications, currentUser, areaSupervisors]);
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -65,7 +82,7 @@ export default function ApplicationsPage() {
       result = result.filter((a) => a.assignedDistributorId === distributorFilter);
     }
     if (areaFilter) {
-      result = result.filter((a) => a.assignedAreaManagerId === areaFilter);
+      result = result.filter((a) => a.assignedAreaSupervisorId === areaFilter);
     }
     if (dateFrom) {
       result = result.filter((a) => a.submittedAt >= dateFrom);
@@ -95,7 +112,7 @@ export default function ApplicationsPage() {
 
   // Lookup helpers
   const plantName = (id: string) => plants.find((p) => p.id === id)?.name ?? '-';
-  const amName = (id?: string) => (id ? areaManagers.find((a) => a.id === id)?.name ?? '-' : '-');
+  const amName = (id?: string) => (id ? areaSupervisors.find((a) => a.id === id)?.name ?? '-' : '-');
 
   const plantOptions: SelectOption[] = [
     { value: '', label: 'All Plants' },
@@ -106,8 +123,8 @@ export default function ApplicationsPage() {
     ...distributors.map((d) => ({ value: d.id, label: d.name })),
   ];
   const amOptions: SelectOption[] = [
-    { value: '', label: 'All Area Managers' },
-    ...areaManagers.map((a) => ({ value: a.id, label: a.name })),
+    { value: '', label: 'All Area Supervisors' },
+    ...areaSupervisors.map((a) => ({ value: a.id, label: a.name })),
   ];
   const statusOptions: SelectOption[] = [
     { value: 'all', label: 'All Statuses' },
@@ -155,9 +172,9 @@ export default function ApplicationsPage() {
       render: (row) => plantName(row.assignedPlantId),
     },
     {
-      key: 'areaManagerId',
-      header: 'Area Manager',
-      render: (row) => amName(row.assignedAreaManagerId),
+      key: 'areaSupervisorId',
+      header: 'Area Supervisor',
+      render: (row) => amName(row.assignedAreaSupervisorId),
     },
     {
       key: 'status',
@@ -273,7 +290,7 @@ export default function ApplicationsPage() {
                 setAreaFilter(e.target.value);
                 setPage(1);
               }}
-              placeholder="Area Manager"
+              placeholder="Area Supervisor"
             />
             <div className="flex gap-2">
               <input

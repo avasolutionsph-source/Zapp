@@ -14,14 +14,14 @@ interface DemoRole {
 
 const demoRoles: DemoRole[] = [
   { role: 'owner', label: 'Owner', color: 'bg-amber-500' },
-  { role: 'operations_manager', label: 'Ops Manager', color: 'bg-purple-500' },
+  { role: 'operations_manager', label: 'Ops Supervisor', color: 'bg-purple-500' },
   { role: 'forecaster', label: 'Forecaster', color: 'bg-blue-500' },
   { role: 'plant_manager', label: 'Plant Manager', color: 'bg-emerald-500' },
   { role: 'billing_user', label: 'Billing User', color: 'bg-red-500' },
   { role: 'partner_distributor', label: 'Partner Distributor', color: 'bg-orange-500' },
   { role: 'franchisee_distributor', label: 'Franchisee (Dist)', color: 'bg-pink-500' },
   { role: 'franchisee_direct', label: 'Franchisee (Direct)', color: 'bg-cyan-500' },
-  { role: 'area_manager', label: 'Area Manager', color: 'bg-lime-500' },
+  { role: 'area_manager', label: 'Area Supervisor', color: 'bg-lime-500' },
 ];
 
 // ── Component ──────────────────────────────────────────────────

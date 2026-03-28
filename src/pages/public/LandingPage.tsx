@@ -258,7 +258,7 @@ export default function LandingPage() {
               step: 2,
               icon: <UserCheck size={28} />,
               title: 'Get Reviewed & Approved',
-              desc: 'Our area managers and operations team review your application, verify documents, and approve your franchise within days.',
+              desc: 'Our area supervisors and operations team review your application, verify documents, and approve your franchise within days.',
             },
             {
               step: 3,

@@ -58,7 +58,7 @@ export default function ReferralCodesPage() {
   const {
     referralCodes,
     distributors,
-    areaManagers,
+    areaSupervisors,
     plants,
     addReferralCode,
   } = useStore();
@@ -79,7 +79,7 @@ export default function ReferralCodesPage() {
   // Generate form
   const [genType, setGenType] = useState<ReferralType>('distributor');
   const [genDistributorId, setGenDistributorId] = useState('');
-  const [genAreaManagerId, setGenAreaManagerId] = useState('');
+  const [genAreaSupervisorId, setGenAreaSupervisorId] = useState('');
   const [genPlantId, setGenPlantId] = useState('');
   const [genCodePreview, setGenCodePreview] = useState(() => generateCode('distributor'));
 
@@ -92,9 +92,9 @@ export default function ReferralCodesPage() {
     () => Object.fromEntries(distributors.map((d) => [d.id, d])),
     [distributors],
   );
-  const areaManagerMap = useMemo(
-    () => Object.fromEntries(areaManagers.map((a) => [a.id, a])),
-    [areaManagers],
+  const areaSupervisorMap = useMemo(
+    () => Object.fromEntries(areaSupervisors.map((a) => [a.id, a])),
+    [areaSupervisors],
   );
   const plantMap = useMemo(
     () => Object.fromEntries(plants.map((p) => [p.id, p])),
@@ -123,7 +123,7 @@ export default function ReferralCodesPage() {
       const q = search.toLowerCase();
       result = result.filter((r) => {
         const dist = r.distributorId ? distributorMap[r.distributorId] : null;
-        const am = r.areaManagerId ? areaManagerMap[r.areaManagerId] : null;
+        const am = r.areaSupervisorId ? areaSupervisorMap[r.areaSupervisorId] : null;
         return (
           r.code.toLowerCase().includes(q) ||
           (dist?.name ?? '').toLowerCase().includes(q) ||
@@ -132,7 +132,7 @@ export default function ReferralCodesPage() {
       });
     }
     return result;
-  }, [referralCodes, typeFilter, statusFilter, plantFilter, search, distributorMap, areaManagerMap]);
+  }, [referralCodes, typeFilter, statusFilter, plantFilter, search, distributorMap, areaSupervisorMap]);
 
   const paged = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
@@ -182,7 +182,7 @@ export default function ReferralCodesPage() {
         code: genCodePreview,
         type: genType,
         distributorId: genType === 'distributor' ? genDistributorId : undefined,
-        areaManagerId: genAreaManagerId || undefined,
+        areaSupervisorId: genAreaSupervisorId || undefined,
         plantId: genPlantId,
         status: 'active',
       });
@@ -192,12 +192,12 @@ export default function ReferralCodesPage() {
       resetGenerateForm();
       setLoading(false);
     }, 500);
-  }, [genCodePreview, genType, genDistributorId, genAreaManagerId, genPlantId, addReferralCode, addToast]);
+  }, [genCodePreview, genType, genDistributorId, genAreaSupervisorId, genPlantId, addReferralCode, addToast]);
 
   const resetGenerateForm = () => {
     setGenType('distributor');
     setGenDistributorId('');
-    setGenAreaManagerId('');
+    setGenAreaSupervisorId('');
     setGenPlantId('');
     setGenCodePreview(generateCode('distributor'));
   };
@@ -265,7 +265,7 @@ export default function ReferralCodesPage() {
     .filter((d) => d.status === 'active')
     .map((d) => ({ value: d.id, label: d.name }));
 
-  const areaManagerOptions: SelectOption[] = areaManagers.map((a) => ({
+  const areaSupervisorOptions: SelectOption[] = areaSupervisors.map((a) => ({
     value: a.id,
     label: a.name,
   }));
@@ -300,11 +300,11 @@ export default function ReferralCodesPage() {
         ),
     },
     {
-      key: 'areaManagerId',
-      header: 'Area Manager',
+      key: 'areaSupervisorId',
+      header: 'Area Supervisor',
       render: (row) =>
-        row.areaManagerId ? (
-          <span className="text-gray-700">{areaManagerMap[row.areaManagerId]?.name ?? '-'}</span>
+        row.areaSupervisorId ? (
+          <span className="text-gray-700">{areaSupervisorMap[row.areaSupervisorId]?.name ?? '-'}</span>
         ) : (
           <span className="text-gray-400">-</span>
         ),
@@ -546,13 +546,13 @@ export default function ReferralCodesPage() {
             />
           )}
 
-          {/* Area Manager */}
+          {/* Area Supervisor */}
           <Select
-            label="Area Manager"
-            placeholder="Select an area manager (optional)"
-            options={[{ value: '', label: 'None' }, ...areaManagerOptions]}
-            value={genAreaManagerId}
-            onChange={(e) => setGenAreaManagerId(e.target.value)}
+            label="Area Supervisor"
+            placeholder="Select an area supervisor (optional)"
+            options={[{ value: '', label: 'None' }, ...areaSupervisorOptions]}
+            value={genAreaSupervisorId}
+            onChange={(e) => setGenAreaSupervisorId(e.target.value)}
           />
 
           {/* Plant */}
@@ -634,10 +634,10 @@ export default function ReferralCodesPage() {
                     : '-'}
                 </span>
 
-                <span className="text-gray-500">Area Manager</span>
+                <span className="text-gray-500">Area Supervisor</span>
                 <span className="text-gray-900">
-                  {qrCode.areaManagerId
-                    ? areaManagerMap[qrCode.areaManagerId]?.name ?? '-'
+                  {qrCode.areaSupervisorId
+                    ? areaSupervisorMap[qrCode.areaSupervisorId]?.name ?? '-'
                     : '-'}
                 </span>
 

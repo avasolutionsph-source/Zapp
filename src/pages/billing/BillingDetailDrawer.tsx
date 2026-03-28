@@ -258,18 +258,15 @@ export default function BillingDetailDrawer({ billing, onClose }: BillingDetailD
             </Card>
           </div>
 
-          {/* Financial Breakdown */}
+          {/* ZAPP Billing (DR-Based) */}
           <Card>
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-gray-900">Financial Breakdown</h4>
-              <Badge variant={isDistributorModel ? 'orange' : 'info'} size="sm">
-                {isDistributorModel ? 'Distributor Model' : 'Direct Model'}
-              </Badge>
+              <h4 className="text-sm font-semibold text-gray-900">ZAPP Billing (DR-Based)</h4>
+              <Badge variant="orange" size="sm">DR Formula</Badge>
             </div>
             <CardContent>
               <div className="space-y-3">
-                {/* Main formula breakdown */}
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="bg-orange-50 rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">DR Total</span>
                     <span className="font-semibold text-gray-900">{formatCurrency(billing.drTotal)}</span>
@@ -282,55 +279,50 @@ export default function BillingDetailDrawer({ billing, onClose }: BillingDetailD
                     <span className="text-blue-600">+ Packaging Total</span>
                     <span className="font-semibold text-blue-600">+{formatCurrency(billing.packagingTotal)}</span>
                   </div>
-                  <div className="border-t border-gray-200 pt-2 flex items-center justify-between">
+                  <div className="border-t border-orange-200 pt-2 flex items-center justify-between">
                     <span className="font-bold text-gray-900">= Total Payable</span>
                     <span className="text-lg font-bold text-zapp-orange">{formatCurrency(billing.totalPayable)}</span>
                   </div>
                 </div>
-
-                {/* Formula display */}
                 <div className="bg-orange-50 border border-orange-100 rounded-lg px-4 py-2">
                   <p className="text-xs text-zapp-orange font-mono font-medium">
-                    Total Payable = (DR Total - Unsold) + Packaging Total
+                    Zapp Billing = (DR Total - Unsold DR Value) + Packaging
                   </p>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                {/* Franchise model details */}
-                <div className="border-t border-gray-100 pt-3 space-y-2">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    {isDistributorModel ? 'Distributor Model Breakdown' : 'Direct Model Breakdown'}
+          {/* Store Remittance (SRP-Based) */}
+          <Card>
+            <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-900">Store Remittance (SRP-Based)</h4>
+              <Badge variant="info" size="sm">SRP Formula</Badge>
+            </div>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="bg-indigo-50 rounded-lg p-4 space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">SRP Total (Sold Qty: {billing.soldQty})</span>
+                    <span className="font-semibold text-gray-900">{formatCurrency(billing.srpTotal)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-green-600">Franchisee Profit (15%)</span>
+                    <span className="font-semibold text-green-600">{formatCurrency(billing.franchiseeProfit)}</span>
+                  </div>
+                  <div className="border-t border-indigo-200 pt-2 flex items-center justify-between">
+                    <span className="font-bold text-gray-900">= Remit to PD (85%)</span>
+                    <span className="text-lg font-bold text-indigo-600">{formatCurrency(billing.remitToPD)}</span>
+                  </div>
+                </div>
+                <div className="bg-indigo-50 border border-indigo-100 rounded-lg px-4 py-2">
+                  <p className="text-xs text-indigo-600 font-mono font-medium">
+                    Store Remittance = 85% of SRP Sales
                   </p>
-                  {isDistributorModel ? (
-                    <>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Gross Sales (SRP)</span>
-                        <span className="font-medium text-gray-900">{formatCurrency(grossSales)}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Franchisee Share (15%)</span>
-                        <span className="font-medium text-green-600">{formatCurrency(franchisee15)}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Distributor Profit</span>
-                        <span className="font-medium text-gray-900">{formatCurrency(distributorProfit)}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Gross Sales (SRP est.)</span>
-                        <span className="font-medium text-gray-900">{formatCurrency(grossSales)}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">DR Cost</span>
-                        <span className="font-medium text-gray-900">{formatCurrency(drCost)}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Franchisee Profit</span>
-                        <span className="font-medium text-green-600">{formatCurrency(franchiseeProfit)}</span>
-                      </div>
-                    </>
-                  )}
+                </div>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>Cutoff Period</span>
+                  <span className="font-medium text-gray-700">{billing.cutoffPeriod}</span>
                 </div>
               </div>
             </CardContent>

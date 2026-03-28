@@ -22,7 +22,7 @@ const PAGE_SIZE = 10;
 
 export default function FranchiseesPage() {
   const navigate = useNavigate();
-  const { stores, plants, distributors, areaManagers } = useStore();
+  const { stores, plants, distributors, areaSupervisors } = useStore();
 
   const [search, setSearch] = useState('');
   const [plantFilter, setPlantFilter] = useState('');
@@ -33,7 +33,7 @@ export default function FranchiseesPage() {
 
   const plantName = (id: string) => plants.find((p) => p.id === id)?.name ?? '-';
   const distName = (id?: string) => (id ? distributors.find((d) => d.id === id)?.name ?? '-' : '-');
-  const amName = (id: string) => areaManagers.find((a) => a.id === id)?.name ?? '-';
+  const amName = (id: string) => areaSupervisors.find((a) => a.id === id)?.name ?? '-';
 
   const filtered = useMemo(() => {
     let result = [...stores];
@@ -115,9 +115,9 @@ export default function FranchiseesPage() {
       render: (row) => distName(row.distributorId),
     },
     {
-      key: 'areaManagerId',
-      header: 'Area Manager',
-      render: (row) => amName(row.areaManagerId),
+      key: 'areaSupervisorId',
+      header: 'Area Supervisor',
+      render: (row) => amName(row.areaSupervisorId),
     },
     {
       key: 'plantId',

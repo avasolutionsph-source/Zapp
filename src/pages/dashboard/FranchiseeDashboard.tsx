@@ -128,8 +128,11 @@ export function FranchiseeDashboard() {
     const totalPackaging = myBilling.reduce((sum, b) => sum + b.packagingTotal, 0);
     const totalPayable = myBilling.reduce((sum, b) => sum + b.totalPayable, 0);
     const totalSRP = mySales.reduce((sum, m) => sum + m.srpSales, 0);
+    const billingSRP = myBilling.reduce((sum, b) => sum + b.srpTotal, 0);
+    const franchiseeProfit = myBilling.reduce((sum, b) => sum + b.franchiseeProfit, 0);
+    const remitToPD = myBilling.reduce((sum, b) => sum + b.remitToPD, 0);
 
-    return { totalDR, totalUnsoldDeduction, totalPackaging, totalPayable, totalSRP };
+    return { totalDR, totalUnsoldDeduction, totalPackaging, totalPayable, totalSRP, billingSRP, franchiseeProfit, remitToPD };
   }, [myBilling, mySales]);
 
   const isDistributor = currentUser?.role === 'franchisee_distributor';
@@ -266,60 +269,52 @@ export function FranchiseeDashboard() {
             <h3 className="text-base font-semibold text-gray-900">Financial Breakdown</h3>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-orange-50 border border-orange-100 rounded-lg p-4">
-              <p className="text-xs text-gray-500 mb-2 font-medium">
-                {isDistributor ? 'DISTRIBUTOR MODEL' : 'DIRECT MODEL'}
-              </p>
+            {/* SRP-Based Remittance */}
+            <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+              <p className="text-xs text-gray-500 mb-2 font-medium">STORE REMITTANCE (SRP-BASED)</p>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Gross Revenue (Sold x SRP)</span>
-                  <span className="font-semibold">{fmt(financialSummary.totalSRP)}</span>
+                  <span className="text-gray-600">Total SRP Sales</span>
+                  <span className="font-semibold">{fmt(financialSummary.billingSRP)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">DR Cost (Cost of Goods)</span>
-                  <span className="font-semibold text-red-600">-{fmt(financialSummary.totalDR)}</span>
+                  <span className="text-green-600">15% Franchisee Profit</span>
+                  <span className="font-semibold text-green-600">{fmt(financialSummary.franchiseeProfit)}</span>
+                </div>
+                <div className="border-t border-indigo-200 pt-2 flex justify-between">
+                  <span className="text-sm font-bold text-gray-900">Remit to PD (85%)</span>
+                  <span className="text-sm font-bold text-indigo-600">{fmt(financialSummary.remitToPD)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* DR-Based Zapp Billing */}
+            <div className="bg-orange-50 border border-orange-100 rounded-lg p-4">
+              <p className="text-xs text-gray-500 mb-2 font-medium">ZAPP BILLING (DR-BASED) - REFERENCE</p>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total DR Sales</span>
+                  <span className="font-semibold">{fmt(financialSummary.totalDR)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Unsold Deduction</span>
                   <span className="font-semibold text-red-600">-{fmt(financialSummary.totalUnsoldDeduction)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Packaging Costs</span>
-                  <span className="font-semibold text-red-600">-{fmt(financialSummary.totalPackaging)}</span>
+                  <span className="text-gray-600">Packaging Charges</span>
+                  <span className="font-semibold text-blue-600">+{fmt(financialSummary.totalPackaging)}</span>
                 </div>
                 <div className="border-t border-orange-200 pt-2 flex justify-between">
-                  <span className="text-sm font-bold text-gray-900">Total Payable to ZAPP</span>
+                  <span className="text-sm font-bold text-gray-900">Zapp Billing Total</span>
                   <span className="text-sm font-bold text-zapp-orange">{fmt(financialSummary.totalPayable)}</span>
                 </div>
               </div>
             </div>
 
-            {isDistributor ? (
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                <p className="text-xs text-gray-500 mb-2 font-medium">PROFIT FORMULA (DISTRIBUTOR)</p>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  <strong>Net Profit</strong> = (Sold x SRP) - (DR Cost) - Unsold Deduction - Packaging
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Distributor commission is built into the DR pricing.
-                </p>
-              </div>
-            ) : (
-              <div className="bg-green-50 border border-green-100 rounded-lg p-4">
-                <p className="text-xs text-gray-500 mb-2 font-medium">PROFIT FORMULA (DIRECT)</p>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  <strong>Net Profit</strong> = (Sold x SRP) - Total Payable to ZAPP
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Direct franchisees pay ZAPP directly at DR price.
-                </p>
-              </div>
-            )}
-
             <div className="flex justify-between items-center pt-2">
-              <span className="text-sm text-gray-500">Estimated Net Profit</span>
+              <span className="text-sm text-gray-500">Franchisee Profit (15% of SRP)</span>
               <Badge variant="success" size="md">
-                {fmt(Math.max(0, financialSummary.totalSRP - financialSummary.totalPayable))}
+                {fmt(financialSummary.franchiseeProfit)}
               </Badge>
             </div>
           </CardContent>

@@ -112,6 +112,7 @@ export default function EndingInventoryPage() {
           ...r,
           unsoldQty: clamped,
           soldQty: r.deliveredQty - clamped,
+          useAI: false, // Manual edit overrides AI
           hasDiscrepancy: r.aiEstimate !== null && Math.abs(clamped - r.aiEstimate) > 0,
         };
       }),
@@ -171,7 +172,7 @@ export default function EndingInventoryPage() {
         aiEstimate: r.aiEstimate ?? undefined,
         confidence: r.aiConfidence ?? undefined,
         discrepancy: r.aiEstimate !== null ? r.unsoldQty - r.aiEstimate : undefined,
-        manualOverride: !r.useAI && r.aiEstimate !== null,
+        manualOverride: !r.useAI,
       }));
 
       const id = `ei-${Date.now().toString(36)}`;

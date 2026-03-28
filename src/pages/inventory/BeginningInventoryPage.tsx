@@ -170,6 +170,8 @@ export default function BeginningInventoryPage() {
           const diff = (value as number) - r.drQty;
           updated.lack = diff < 0 ? Math.abs(diff) : 0;
           updated.overage = diff > 0 ? diff : 0;
+          // Auto-set manualOverride when user edits the quantity
+          updated.manualOverride = true;
         }
         if (field === 'manualOverride') {
           updated.manualOverride = value as boolean;

@@ -1,5 +1,5 @@
 // ============================================================
-// ZAPP Donuts ERP - Operations Manager Dashboard
+// ZAPP Donuts ERP - Operations Supervisor Dashboard
 // ============================================================
 
 import { useState, useEffect, useMemo } from 'react';

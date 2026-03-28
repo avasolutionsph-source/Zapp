@@ -33,7 +33,7 @@ export default function ApplicationDetailPage() {
     applications,
     plants,
     distributors,
-    areaManagers,
+    areaSupervisors,
     currentUser,
     reviewApplication,
   } = useStore();
@@ -67,8 +67,8 @@ export default function ApplicationDetailPage() {
   const distributor = application.assignedDistributorId
     ? distributors.find((d) => d.id === application.assignedDistributorId)
     : null;
-  const areaManager = application.assignedAreaManagerId
-    ? areaManagers.find((a) => a.id === application.assignedAreaManagerId)
+  const areaSupervisor = application.assignedAreaSupervisorId
+    ? areaSupervisors.find((a) => a.id === application.assignedAreaSupervisorId)
     : null;
 
   const isPending = application.status === 'pending';
@@ -212,8 +212,8 @@ export default function ApplicationDetailPage() {
                 <dd className="mt-1 text-sm text-gray-700">{distributor?.name ?? 'N/A (Direct)'}</dd>
               </div>
               <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Area Manager</dt>
-                <dd className="mt-1 text-sm text-gray-700">{areaManager?.name ?? 'Not Assigned'}</dd>
+                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Area Supervisor</dt>
+                <dd className="mt-1 text-sm text-gray-700">{areaSupervisor?.name ?? 'Not Assigned'}</dd>
               </div>
               <div className="sm:col-span-2">
                 <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Plant</dt>

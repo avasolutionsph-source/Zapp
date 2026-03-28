@@ -22,7 +22,7 @@ import type { TableColumn, SelectOption } from '@/components/ui';
 const PAGE_SIZE = 10;
 
 export default function AreaManagersPage() {
-  const { areaManagers, plants, stores } = useStore();
+  const { areaSupervisors, plants, stores } = useStore();
 
   const [search, setSearch] = useState('');
   const [plantFilter, setPlantFilter] = useState('');
@@ -30,15 +30,15 @@ export default function AreaManagersPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const enriched = useMemo(() =>
-    areaManagers.map((am) => {
+    areaSupervisors.map((am) => {
       const amStores = stores.filter(
         (s) =>
           am.assignedStoreIds.includes(s.id) ||
-          s.areaManagerId === am.id,
+          s.areaSupervisorId === am.id,
       );
       return { ...am, storeCount: amStores.length, stores: amStores };
     }),
-  [areaManagers, stores]);
+  [areaSupervisors, stores]);
 
   const filtered = useMemo(() => {
     let result = [...enriched];
@@ -129,13 +129,13 @@ export default function AreaManagersPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Area Managers</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage area managers and their assigned territories</p>
+        <h1 className="text-2xl font-bold text-gray-900">Area Supervisors</h1>
+        <p className="text-sm text-gray-500 mt-1">Manage area supervisors and their assigned territories</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Stat icon={<Users size={18} />} label="Total Area Managers" value={areaManagers.length} />
-        <Stat icon={<MapPin size={18} />} label="Total Areas Covered" value={areaManagers.reduce((s, am) => s + am.assignedAreas.length, 0)} />
+        <Stat icon={<Users size={18} />} label="Total Area Supervisors" value={areaSupervisors.length} />
+        <Stat icon={<MapPin size={18} />} label="Total Areas Covered" value={areaSupervisors.reduce((s, am) => s + am.assignedAreas.length, 0)} />
         <Stat label="Total Stores Managed" value={enriched.reduce((s, am) => s + am.storeCount, 0)} />
       </div>
 
@@ -154,7 +154,7 @@ export default function AreaManagersPage() {
         columns={columns}
         data={paged}
         keyExtractor={(row) => row.id}
-        emptyMessage="No area managers found."
+        emptyMessage="No area supervisors found."
         pagination={{
           page,
           pageSize: PAGE_SIZE,

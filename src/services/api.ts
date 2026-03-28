@@ -19,7 +19,7 @@ import type {
   ForecastItem,
   ReferralCode,
   Distributor,
-  AreaManager,
+  AreaSupervisor,
   Plant,
 } from '@/types';
 
@@ -30,7 +30,7 @@ import {
   stores,
   applications,
   distributors,
-  areaManagers,
+  areaSupervisors,
   billingRecords,
   payments,
   packagingCatalog,
@@ -141,7 +141,7 @@ export const referralService = {
     valid: boolean;
     referral?: ReferralCode;
     distributor?: Distributor;
-    areaManager?: AreaManager;
+    areaSupervisor?: AreaSupervisor;
     plant?: Plant;
   }> => {
     await delay();
@@ -150,9 +150,9 @@ export const referralService = {
     );
     if (!ref) return { valid: false };
     const distributor = distributors.find((d) => d.id === ref.distributorId);
-    const areaManager = areaManagers.find((a) => a.id === ref.areaManagerId);
+    const areaSupervisor = areaSupervisors.find((a) => a.id === ref.areaSupervisorId);
     const plant = plants.find((p) => p.id === ref.plantId);
-    return { valid: true, referral: ref, distributor, areaManager, plant };
+    return { valid: true, referral: ref, distributor, areaSupervisor, plant };
   },
 
   generate: async (
@@ -705,23 +705,23 @@ export const analyticsService = {
 
   getAreaSales: async (): Promise<
     {
-      areaManagerId: string;
-      areaManagerName: string;
+      areaSupervisorId: string;
+      areaSupervisorName: string;
       areas: string[];
       totalRevenue: number;
       storeCount: number;
     }[]
   > => {
     await delay();
-    return areaManagers.map((am) => {
-      const amStores = stores.filter((s) => s.areaManagerId === am.id);
+    return areaSupervisors.map((am) => {
+      const amStores = stores.filter((s) => s.areaSupervisorId === am.id);
       const storeIds = new Set(amStores.map((s) => s.id));
       const revenue = salesMetrics
         .filter((m) => storeIds.has(m.storeId))
         .reduce((s, m) => s + m.srpSales, 0);
       return {
-        areaManagerId: am.id,
-        areaManagerName: am.name,
+        areaSupervisorId: am.id,
+        areaSupervisorName: am.name,
         areas: am.assignedAreas,
         totalRevenue: revenue,
         storeCount: amStores.length,

@@ -36,6 +36,14 @@ const statusOptions: SelectOption[] = [
   { value: 'overdue', label: 'Overdue' },
 ];
 
+const cutoffOptions: SelectOption[] = [
+  { value: '', label: 'All Cutoffs' },
+  { value: '1-7', label: '1-7' },
+  { value: '8-14', label: '8-14' },
+  { value: '15-21', label: '15-21' },
+  { value: '22-EOM', label: '22-EOM' },
+];
+
 // ── Due label helper ─────────────────────────────────────────────────────
 
 function DueLabel({ dueAt, status }: { dueAt: string; status: string }) {
@@ -99,6 +107,7 @@ export default function BillingPage() {
   const [plantFilter, setPlantFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [storeSearch, setStoreSearch] = useState('');
+  const [cutoffFilter, setCutoffFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
@@ -139,11 +148,12 @@ export default function BillingPage() {
         return name.includes(q);
       });
     }
+    if (cutoffFilter) result = result.filter((b) => b.cutoffPeriod === cutoffFilter);
     if (dateFrom) result = result.filter((b) => b.issuedAt >= dateFrom);
     if (dateTo) result = result.filter((b) => b.issuedAt <= dateTo + 'T23:59:59Z');
     result.sort((a, b) => b.issuedAt.localeCompare(a.issuedAt));
     return result;
-  }, [allBilling, plantFilter, statusFilter, storeSearch, dateFrom, dateTo]);
+  }, [allBilling, plantFilter, statusFilter, storeSearch, cutoffFilter, dateFrom, dateTo]);
 
   const paged = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
@@ -158,6 +168,8 @@ export default function BillingPage() {
       totalPaid: source.filter((b) => b.status === 'paid').reduce((s, b) => s + b.totalPayable, 0),
       overdueCount: source.filter((b) => b.status === 'overdue').length,
       totalRecords: source.length,
+      totalRemittance: source.reduce((s, b) => s + b.remitToPD, 0),
+      totalSRP: source.reduce((s, b) => s + b.srpTotal, 0),
     };
   }, [allBilling, plantFilter]);
 
@@ -255,6 +267,21 @@ export default function BillingPage() {
       ),
     },
     {
+      key: 'srpTotal',
+      header: 'SRP Total',
+      render: (row) => <span className="text-sm font-medium text-purple-600">{formatCurrency(row.srpTotal)}</span>,
+    },
+    {
+      key: 'franchiseeProfit',
+      header: 'Profit (15%)',
+      render: (row) => <span className="text-sm text-green-600">{formatCurrency(row.franchiseeProfit)}</span>,
+    },
+    {
+      key: 'remitToPD',
+      header: 'Remit to PD (85%)',
+      render: (row) => <span className="text-sm font-medium text-indigo-600">{formatCurrency(row.remitToPD)}</span>,
+    },
+    {
       key: 'status',
       header: 'Status',
       render: (row) => <StatusBadge category="billing" status={row.status} />,
@@ -338,25 +365,49 @@ export default function BillingPage() {
         </div>
       </div>
 
-      {/* Formula Banner */}
-      <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 flex items-center gap-3">
-        <Receipt size={18} className="text-zapp-orange shrink-0" />
-        <p className="text-sm text-zapp-brown font-medium">
-          <span className="font-mono font-bold">Total Payable = (DR Total - Unsold Deduction) + Packaging Total</span>
-        </p>
+      {/* Formula Banners */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <Receipt size={18} className="text-zapp-orange shrink-0" />
+          <div>
+            <p className="text-xs text-gray-500 font-semibold uppercase">Zapp Billing (DR-Based)</p>
+            <p className="text-sm text-zapp-brown font-medium">
+              <span className="font-mono font-bold">Total Payable = (DR Total - Unsold Deduction) + Packaging</span>
+            </p>
+          </div>
+        </div>
+        <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <DollarSign size={18} className="text-indigo-600 shrink-0" />
+          <div>
+            <p className="text-xs text-gray-500 font-semibold uppercase">Store Remittance (SRP-Based)</p>
+            <p className="text-sm text-indigo-800 font-medium">
+              <span className="font-mono font-bold">Remit to PD = 85% of SRP Sales | Franchisee Profit = 15% of SRP Sales</span>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <Stat
           icon={<DollarSign size={18} />}
-          label="Total Payable"
+          label="DR Total Payable"
           value={formatCurrency(stats.totalPayable)}
+        />
+        <Stat
+          icon={<DollarSign size={18} />}
+          label="SRP Remittance (85%)"
+          value={formatCurrency(stats.totalRemittance)}
         />
         <Stat
           icon={<CheckCircle size={18} />}
           label="Total Paid"
           value={formatCurrency(stats.totalPaid)}
+        />
+        <Stat
+          icon={<Receipt size={18} />}
+          label="Total SRP Sales"
+          value={formatCurrency(stats.totalSRP)}
         />
         <Stat
           icon={<AlertTriangle size={18} />}
@@ -373,12 +424,18 @@ export default function BillingPage() {
       {/* Filters */}
       <Card>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <Select
               options={statusOptions}
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
               placeholder="Filter by status"
+            />
+            <Select
+              options={cutoffOptions}
+              value={cutoffFilter}
+              onChange={(e) => { setCutoffFilter(e.target.value); setPage(1); }}
+              placeholder="Cutoff period"
             />
             <SearchInput
               value={storeSearch}

@@ -1,5 +1,5 @@
 // ============================================================
-// ZAPP Donuts ERP - Area Manager Dashboard
+// ZAPP Donuts ERP - Area Supervisor Dashboard
 // ============================================================
 
 import { useState, useEffect, useMemo } from 'react';
@@ -157,7 +157,7 @@ export function AreaManagerDashboard() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Area Manager Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Area Supervisor Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">
           Performance for your assigned stores and areas
         </p>

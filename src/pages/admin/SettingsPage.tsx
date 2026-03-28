@@ -48,14 +48,14 @@ const BUILD_DATE = '2026-03-20';
 
 const ROLE_LABELS: Record<string, string> = {
   owner: 'Owner',
-  operations_manager: 'Operations Manager',
+  operations_manager: 'Operations Supervisor',
   forecaster: 'Forecaster',
   plant_manager: 'Plant Manager',
   billing_user: 'Billing User',
   partner_distributor: 'Partner Distributor',
   franchisee_distributor: 'Franchisee Distributor',
   franchisee_direct: 'Franchisee Direct',
-  area_manager: 'Area Manager',
+  area_manager: 'Area Supervisor',
 };
 
 const ROLE_VARIANTS: Record<string, 'success' | 'warning' | 'danger' | 'info' | 'neutral' | 'orange'> = {

@@ -32,6 +32,7 @@ export function DistributorDashboard() {
   const currentUser = useStore((s) => s.currentUser);
   const stores = useStore((s) => s.stores);
   const salesMetrics = useStore((s) => s.salesMetrics);
+  const billingRecords = useStore((s) => s.billingRecords);
   const distId = currentUser?.distributorId ?? '';
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export function DistributorDashboard() {
   // ── Filtered data ───────────────────────────────────────────
   const myStores = useMemo(() => stores.filter((s) => s.distributorId === distId), [stores, distId]);
   const mySales = useMemo(() => salesMetrics.filter((m) => m.distributorId === distId), [salesMetrics, distId]);
+  const myBilling = useMemo(() => billingRecords.filter((b) => b.distributorId === distId), [billingRecords, distId]);
 
   // ── KPIs ────────────────────────────────────────────────────
   const kpis = useMemo(() => {
@@ -49,8 +51,11 @@ export function DistributorDashboard() {
     const totalSRP = mySales.reduce((sum, m) => sum + m.srpSales, 0);
     const totalDR = mySales.reduce((sum, m) => sum + m.drSales, 0);
     const avgPerStore = storeCount > 0 ? totalSRP / storeCount : 0;
-    return { storeCount, totalSRP, totalDR, avgPerStore };
-  }, [myStores, mySales]);
+    const totalRemittance = myBilling.reduce((sum, b) => sum + b.remitToPD, 0);
+    const totalCollected = myBilling.filter((b) => b.status === 'paid').reduce((sum, b) => sum + b.remitToPD, 0);
+    const totalDRBilling = myBilling.reduce((sum, b) => sum + b.totalPayable, 0);
+    return { storeCount, totalSRP, totalDR, avgPerStore, totalRemittance, totalCollected, totalDRBilling };
+  }, [myStores, mySales, myBilling]);
 
   // ── Store Performance Table ─────────────────────────────────
   const storePerformance = useMemo(() => {
@@ -61,6 +66,13 @@ export function DistributorDashboard() {
       entry.drSales += m.drSales;
       sMap.set(m.storeId, entry);
     });
+    const bMap = new Map<string, { remittance: number; drBilling: number }>();
+    myBilling.forEach((b) => {
+      const entry = bMap.get(b.storeId) ?? { remittance: 0, drBilling: 0 };
+      entry.remittance += b.remitToPD;
+      entry.drBilling += b.totalPayable;
+      bMap.set(b.storeId, entry);
+    });
     return myStores
       .map((s) => ({
         id: s.id,
@@ -69,9 +81,11 @@ export function DistributorDashboard() {
         status: s.status,
         srpSales: sMap.get(s.id)?.srpSales ?? 0,
         drSales: sMap.get(s.id)?.drSales ?? 0,
+        remittance: bMap.get(s.id)?.remittance ?? 0,
+        drBilling: bMap.get(s.id)?.drBilling ?? 0,
       }))
       .sort((a, b) => b.srpSales - a.srpSales);
-  }, [myStores, mySales]);
+  }, [myStores, mySales, myBilling]);
 
   const storeColumns: TableColumn<(typeof storePerformance)[0]>[] = [
     {
@@ -91,6 +105,16 @@ export function DistributorDashboard() {
       key: 'drSales',
       header: 'DR Sales',
       render: (row) => <span>P{row.drSales.toLocaleString()}</span>,
+    },
+    {
+      key: 'remittance',
+      header: 'Remittance (85%)',
+      render: (row) => <span className="font-semibold text-indigo-600">P{row.remittance.toLocaleString()}</span>,
+    },
+    {
+      key: 'drBilling',
+      header: 'Zapp DR Billing',
+      render: (row) => <span className="text-zapp-orange">P{row.drBilling.toLocaleString()}</span>,
     },
   ];
 
@@ -154,8 +178,15 @@ export function DistributorDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Stat icon={<StoreIcon size={20} />} label="My Stores" value={kpis.storeCount} />
         <Stat icon={<TrendingUp size={20} />} label="Total SRP Sales" value={fmt(kpis.totalSRP)} change={9.2} />
+        <Stat icon={<DollarSign size={20} />} label="Total Remittance (85%)" value={fmt(kpis.totalRemittance)} />
+        <Stat icon={<BarChart3 size={20} />} label="Total Collected" value={fmt(kpis.totalCollected)} />
+      </div>
+
+      {/* Billing Reference */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Stat icon={<DollarSign size={20} />} label="Total DR Sales" value={fmt(kpis.totalDR)} />
-        <Stat icon={<BarChart3 size={20} />} label="Avg / Store" value={fmt(Math.round(kpis.avgPerStore))} />
+        <Stat icon={<DollarSign size={20} />} label="Zapp DR Billing (ref)" value={fmt(kpis.totalDRBilling)} />
+        <Stat icon={<BarChart3 size={20} />} label="Avg SRP / Store" value={fmt(Math.round(kpis.avgPerStore))} />
       </div>
 
       {/* Sales Trend + Leaderboard */}
