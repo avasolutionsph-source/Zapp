@@ -89,7 +89,6 @@ export default function StoreDetailPage() {
     );
   }
 
-  const totalDR = storeMetrics.reduce((s, m) => s + m.drSales, 0);
   const totalSRP = storeMetrics.reduce((s, m) => s + m.srpSales, 0);
   const avgDaily = storeMetrics.length > 0 ? Math.round(totalSRP / Math.max(storeMetrics.length, 1)) : 0;
 

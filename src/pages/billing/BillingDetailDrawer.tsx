@@ -194,16 +194,6 @@ export default function BillingDetailDrawer({ billing, onClose }: BillingDetailD
     [billing],
   );
 
-  const franchiseModel = store?.franchiseType ?? 'direct';
-  const isDistributorModel = franchiseModel === 'distributor';
-
-  // Financial calculations for franchise model breakdown
-  const grossSales = billing ? billing.drTotal : 0;
-  const franchisee15 = Math.round(grossSales * 0.15);
-  const distributorProfit = billing ? grossSales - billing.drTotal : 0;
-  const drCost = billing?.drTotal ?? 0;
-  const franchiseeProfit = grossSales - drCost;
-
   const formatCurrency = (n: number) => `P${n.toLocaleString()}`;
 
   if (!billing) return null;

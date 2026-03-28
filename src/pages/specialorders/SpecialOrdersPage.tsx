@@ -7,10 +7,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import {
-  Card,
-  CardContent,
   Table,
-  StatusBadge,
   Stat,
   Select,
 } from '@/components/ui';

@@ -320,6 +320,7 @@ export const useStore = create<AppStore>((set, get) => ({
             phone: approvedApp.mobile,
             email: approvedApp.email,
             createdAt: now,
+            deliveryStatus: 'active',
           };
           updatedStores = [...s.stores, newStore];
         }

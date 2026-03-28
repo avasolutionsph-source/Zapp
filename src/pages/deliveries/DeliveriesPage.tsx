@@ -74,7 +74,7 @@ export default function DeliveriesPage() {
         storeMap.set(store.id, {
           unpaidCount,
           storeName: store.name,
-          deliveryStatus: (store as Record<string, unknown>).deliveryStatus as string | undefined,
+          deliveryStatus: store.deliveryStatus,
         });
       }
     }
